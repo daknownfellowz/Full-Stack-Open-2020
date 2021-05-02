@@ -19,15 +19,11 @@ const Content = (props) => {
 
 const Total = (props) => {
 
-  let sum = 0;
-
-  props.parts.parts.forEach(value => {
-    sum = sum + value.exercises
-  })
+  const total = props.parts.parts.reduce((totalExercises, part) => totalExercises + part.exercises, 0);
 
   return (
     <>
-    <p><b>total of {sum} exercises</b></p>
+    <p><b>total of {total} exercises</b></p>
     </>
   )  
 }
