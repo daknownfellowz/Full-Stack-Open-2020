@@ -9,15 +9,28 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    const personObject = {
-      content: newName,  
-      name: newName,
-      key: newName,
-      id: persons.length + 1
-    } 
     
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    var found = false;
+    persons.forEach(function(item, index, array) {
+      if (item.name == newName) {
+        found = true;
+      }
+    })
+
+    if (found) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+
+      const personObject = {
+        content: newName,  
+        name: newName,
+        key: newName,
+        id: persons.length + 1
+      } 
+      
+      setPersons(persons.concat(personObject))
+      setNewName('')
+    }
   }
 
   const handlePersonChange = (event) => {
