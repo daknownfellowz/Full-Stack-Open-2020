@@ -48,24 +48,38 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <form onSubmit={addPerson}>  
-        <div>
-          name:
-          <input value={newName} onChange={handlePersonChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
+
       <h2>Numbers</h2>
 
+      <Persons persons={persons}/>
+
+    </div>
+  )
+}
+
+const PersonForm = (props) => (
+  <form onSubmit={props.addPerson}>  
+    <div>
+      name:
+      <input value={props.newName} onChange={props.handlePersonChange} />
+    </div>
+    <div>
+      number: <input value={props.newNumber} onChange={props.handleNumberChange} />
+    </div>
+    <div>
+      <button type="submit">add</button>
+    </div>
+  </form>
+)
+
+const Persons = ({persons}) => {
+  return (
+    <div>
+      <h2>Numbers</h2>
         {persons.map(person => 
             <Person key={person.id} person={person} />
         )}
-      
     </div>
   )
 }
