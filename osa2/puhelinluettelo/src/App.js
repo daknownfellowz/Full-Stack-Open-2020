@@ -14,6 +14,25 @@ const App = () => {
       })
   }, [])
 
+  const removePersonNumber = (id, name) => {
+
+    if (window.confirm("Delete " + name + "?")) {
+      personService
+      .remove(id)
+      .then(response => {        
+        console.log(response)
+        console.log('Person id ' + id + ' was deleted')
+      })
+
+      personService
+      .getAll()
+      .then(response => {
+        setPersons(response.data)
+      })      
+    }
+    
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
 
@@ -60,7 +79,7 @@ const App = () => {
 
       <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       
-      <Persons persons={persons}/>
+      <Persons persons={persons} removePerson={removePersonNumber} />
 
     </div>
   )
@@ -81,20 +100,24 @@ const PersonForm = (props) => (
   </form>
 )
 
-const Persons = ({persons}) => {
+const Persons = ({persons, removePerson}) => {
   return (
     <div>
       <h2>Numbers</h2>
         {persons.map(person => 
-            <Person key={person.id} person={person} />
+          <Person 
+            key={person.id} 
+            person={person}
+            removePerson={() => removePerson(person.id, person.name)}
+          />
         )}
     </div>
   )
 }
 
-const Person = ({ person }) => {
+const Person = ({ person, removePerson }) => {
   return (
-    <p>{person.name} {person.number}</p>
+    <p>{person.name} {person.number} <button onClick={removePerson}>delete</button></p>
   )
 }
 
