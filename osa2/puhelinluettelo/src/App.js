@@ -5,6 +5,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -22,6 +23,13 @@ const App = () => {
       .then(response => {        
         console.log(response)
         console.log('Person id ' + id + ' was deleted')
+
+        setNotificationMessage(
+          `Removed '${name}'`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
       })
 
       personService
@@ -62,6 +70,14 @@ const App = () => {
         setPersons(persons.concat(response.data))
         setNewNumber('')
         console.log(response)
+
+        setNotificationMessage(
+          `Added '${newName}'`
+        )
+        setTimeout(() => {
+          setNotificationMessage(null)
+        }, 5000)
+
       })
     }
   }
@@ -76,6 +92,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification notificationMessage={notificationMessage} />
 
       <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       
@@ -104,6 +122,7 @@ const Persons = ({persons, removePerson}) => {
   return (
     <div>
       <h2>Numbers</h2>
+      
         {persons.map(person => 
           <Person 
             key={person.id} 
@@ -118,6 +137,30 @@ const Persons = ({persons, removePerson}) => {
 const Person = ({ person, removePerson }) => {
   return (
     <p>{person.name} {person.number} <button onClick={removePerson}>delete</button></p>
+  )
+}
+
+const Notification = ({ notificationMessage }) => {
+
+  const notificationStyle = {
+    color: 'green',
+    backgroundColor: 'lightgrey',
+    fontStyle: 'italic',
+    fontSize: '20px',
+    borderRadius: '5px',
+    border: '2px solid green',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (notificationMessage === null || notificationMessage == '') {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {notificationMessage}
+    </div>
   )
 }
 
