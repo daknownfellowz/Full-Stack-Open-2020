@@ -27,6 +27,10 @@ let persons = [
 app.get('/', (req, res) => {
   res.send('<h1>3.1 puhelinluettelon backend step1 pääsivu</h1>')
 })
+
+app.get('/info', (req, res) => {
+  res.send('<p>Phonebook has info for ' + persons.length + ' persons</p><p>' + new Date() + '</p>')
+})
     
 app.get('/api/persons', (req, res) => {
   res.json(persons)
