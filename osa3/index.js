@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
+
+app.use(morgan('tiny'))
 
 let persons = [
     {
@@ -26,7 +29,7 @@ let persons = [
     }
 ]
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {    
   res.send('<h1>3.1 puhelinluettelon backend step1 pääsivu ' + Math.random() + '</h1>')
 })
 
