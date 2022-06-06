@@ -40,43 +40,47 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then(result => {
       response.status(204).end()
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'unable to delete given id' })
-    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
-  console.log('Saving new person...')
-  
-  if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
-    })
-  }
-
-  if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
-    })
-  }  
+  console.log('Saving new person with error handling...') 
   
   const personToSave = new Person({
     name: body.name,
     number: body.number,    
   })
 
-  personToSave.save().then(savedPerson => {
+  personToSave.save()
+  .then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
 })
+
+// Virheiden käsittelijät
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'unable to delete given id' })
+  }
+
+  next(error)
+}
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
