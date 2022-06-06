@@ -74,7 +74,7 @@ app.post('/api/persons', (request, response, next) => {
   
   const personToSave = new Person({
     name: body.name,
-    number: body.number,    
+    number: body.number,
   })
 
   personToSave.save()
@@ -95,6 +95,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'unable to find given person id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 
   next(error)

@@ -6,6 +6,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [notificationMessage, setNotificationMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     personService
@@ -79,6 +80,16 @@ const App = () => {
         }, 5000)
 
       })
+      .catch(error => {
+        console.log(error.response.data)
+        setErrorMessage(
+          `${error.response.data.error}`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        
+      })
     }
   }
 
@@ -94,6 +105,7 @@ const App = () => {
       <h2>Phonebook</h2>
 
       <Notification notificationMessage={notificationMessage} />
+      <Error errorMessage={errorMessage} />
 
       <PersonForm addPerson={addPerson} newName={newName} handlePersonChange={handlePersonChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       
@@ -160,6 +172,30 @@ const Notification = ({ notificationMessage }) => {
   return (
     <div style={notificationStyle}>
       {notificationMessage}
+    </div>
+  )
+}
+
+const Error = ({ errorMessage }) => {
+
+  const errorStyle = {
+    color: 'red',
+    backgroundColor: 'lightgrey',
+    fontStyle: 'italic',
+    fontSize: '20px',
+    borderRadius: '5px',
+    border: '2px solid red',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (errorMessage === null || errorMessage == '') {
+    return null
+  }
+
+  return (
+    <div style={errorStyle}>
+      {errorMessage}
     </div>
   )
 }
