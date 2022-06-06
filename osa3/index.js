@@ -47,25 +47,15 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-const generateId = () => {
-  return Math.floor(Math.random() * 100);
-}
-
 app.post('/api/persons', (request, response) => {
   const body = request.body
+
+  console.log('Saving new person...')
   
   if (!body.name) {
     return response.status(400).json({ 
       error: 'name missing' 
     })
-  } else {
-    const searchPerson = persons.find(person => person.name === body.name)
-
-    if (searchPerson) {      
-      return response.status(400).json({ 
-        error: 'name must be unique' 
-      })
-    }
   }
 
   if (!body.number) {
@@ -74,15 +64,14 @@ app.post('/api/persons', (request, response) => {
     })
   }  
   
-  const person = {
-    id: generateId(),
+  const personToSave = new Person({
     name: body.name,
     number: body.number,    
-  }
-  
-  persons = persons.concat(person)
-  
-  response.json(person)
+  })
+
+  personToSave.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT
