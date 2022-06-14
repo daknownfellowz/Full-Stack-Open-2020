@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+    "title": "Politiikan broilerit",
+    "author": "Ylen toimittajat",
+    "url": "http://www.poliitikanbroilerit.com/blaablaa",
+    "likes": 4400
+
+}
