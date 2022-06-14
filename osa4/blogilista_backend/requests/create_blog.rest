@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "Politiikan broilerit",
-    "author": "Ylen toimittajat",
-    "url": "http://www.poliitikanbroilerit.com/blaablaa",
-    "likes": 4400
+    "title": "4.2 blogilista step2 vaiheen blogi",
+    "author": "HardcoderX",
+    "url": "http://www.koodarivekkulit.com/blaablaa",
+    "likes": 500
 
 }
