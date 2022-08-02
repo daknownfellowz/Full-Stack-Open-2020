@@ -38,6 +38,30 @@ test('there are two blogs', async () => {
   expect(response.body).toHaveLength(2)
 })
 
+test('a blog can be added ', async () => {
+  const newBlog = {
+    title: 'Uusi blogi',
+    author: 'Deputy Dawg',
+    url: 'www.blogi.com',
+    likes: 0,
+  }
+  
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+  const response = await api.get('/api/blogs')
+  
+  const contents = response.body.map(r => r.title)
+  
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  expect(contents).toContain(
+    'Uusi blogi'
+  )
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
