@@ -17,6 +17,11 @@ const initialBlogs = [
   },
 ]
 
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
@@ -60,6 +65,25 @@ test('a blog can be added ', async () => {
   expect(contents).toContain(
     'Uusi blogi'
   )
+})
+
+test('blog can be deleted', async () => {
+  const blogsAtStart = await blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+  
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(
+    initialBlogs.length - 1
+  )
+
+  const contents = blogsAtEnd.map(r => r.title)
+
+  expect(contents).not.toContain(blogToDelete.content)
 })
 
 afterAll(() => {
