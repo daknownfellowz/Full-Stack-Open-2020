@@ -1,5 +1,6 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcmRpbmFsIiwiaWQiOiI2MmVhYmEyYzgzM2VjNmE2N2RlYjU4NzEiLCJpYXQiOjE2NTk1NTQyODl9.Yjd1XnWRfWSZeJCkZQloGK6oIyRdG8p0sPlIOiXyNVM
 
 {
     "title": "Blogi random käyttäjällä (ensimmäinen) varustettuna",
