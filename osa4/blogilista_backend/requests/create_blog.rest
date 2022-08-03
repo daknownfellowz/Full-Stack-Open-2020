@@ -2,9 +2,8 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-    "title": "4.2 blogilista step2 vaiheen blogi",
-    "author": "HardcoderX",
-    "url": "http://www.koodarivekkulit.com/blaablaa",
-    "likes": 500
-
+    "title": "Blogi random käyttäjällä (ensimmäinen) varustettuna",
+    "author": "Paappa",
+    "url": "http://www.koodarivekkulit.com/hu3rr3r3r3bbaaa",
+    "likes": 600
 }
