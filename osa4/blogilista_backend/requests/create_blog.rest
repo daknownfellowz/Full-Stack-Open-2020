@@ -3,8 +3,8 @@ content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcmRpbmFsIiwiaWQiOiI2MmVhYmEyYzgzM2VjNmE2N2RlYjU4NzEiLCJpYXQiOjE2NTk1NTQyODl9.Yjd1XnWRfWSZeJCkZQloGK6oIyRdG8p0sPlIOiXyNVM
 
 {
-    "title": "Blogi random käyttäjällä (ensimmäinen) varustettuna",
-    "author": "Paappa",
-    "url": "http://www.koodarivekkulit.com/hu3rr3r3r3bbaaa",
-    "likes": 600
+    "title": "Blogi tokenilla varustettu 2",
+    "author": "Paappa22",
+    "url": "http://www.koodarivekkulit.com/joopas",
+    "likes": 6999
 }
