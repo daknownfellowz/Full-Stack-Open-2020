@@ -8,6 +8,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -45,6 +47,10 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
+      setErrorMessage('wrong username or password')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
     }
   }
 
@@ -62,6 +68,14 @@ const App = () => {
     const blog = await blogService.create({
       title, author, url,
     })
+
+    setNotificationMessage(
+      `a new blog ${title} by ${author} added`
+    )
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )
@@ -74,6 +88,10 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+
+        <Notification notificationMessage={notificationMessage} />
+        <Error errorMessage={errorMessage} />
+
         <form onSubmit={handleLogin}>
         <div>
           username
@@ -102,6 +120,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+
+      <Notification notificationMessage={notificationMessage} />
+      <Error errorMessage={errorMessage} />
+
       <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
 
       <h2>create new</h2>
@@ -139,6 +161,54 @@ const App = () => {
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
+    </div>
+  )
+}
+
+const Notification = ({ notificationMessage }) => {
+
+  const notificationStyle = {
+    color: 'green',
+    backgroundColor: 'lightgrey',
+    fontStyle: 'italic',
+    fontSize: '20px',
+    borderRadius: '5px',
+    border: '2px solid green',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (notificationMessage === null || notificationMessage == '') {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {notificationMessage}
+    </div>
+  )
+}
+
+const Error = ({ errorMessage }) => {
+
+  const errorStyle = {
+    color: 'red',
+    backgroundColor: 'lightgrey',
+    fontStyle: 'italic',
+    fontSize: '20px',
+    borderRadius: '5px',
+    border: '2px solid red',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (errorMessage === null || errorMessage == '') {
+    return null
+  }
+
+  return (
+    <div style={errorStyle}>
+      {errorMessage}
     </div>
   )
 }
