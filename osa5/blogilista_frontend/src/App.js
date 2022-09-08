@@ -57,6 +57,32 @@ const App = () => {
     }
   }
 
+  // add likes
+  const updateBlog = async(blog) => {
+    const updateBlog = { 
+      title: blog.title,
+      author: blog.author,
+      url: blog.url,
+      likes: blog.likes,
+    }    
+    console.log('Like button clicked in blog: ', updateBlog)
+
+    try {
+      await blogService.update(blog.id, updateBlog)
+
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      )
+
+    } catch (exception) {
+      console.log('unable to update!')
+      setErrorMessage('unable to update')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  } 
+
   const logOut = async (event) => {
     event.preventDefault()
     console.log('Logging out...')
@@ -144,7 +170,7 @@ const App = () => {
       </Togglable>   
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       )}
     </div>
   )
