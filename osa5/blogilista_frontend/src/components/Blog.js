@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog, updateBlog}) => {
+const Blog = ({blog, updateBlog, loggedUser, removeBlog}) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const removeButtonStyle = {
+    backgroundColor: 'blue',
   }
   
   const [visible, setVisible] = useState(false)
@@ -22,6 +26,13 @@ const Blog = ({blog, updateBlog}) => {
     updateBlog({
       ...blog,
       likes: blog.likes + 1,
+    })
+  }
+
+  const remove = () => {
+    console.log('Remove button clicked!!!')
+    removeBlog({
+      ...blog      
     })
   }
   
@@ -40,7 +51,13 @@ const Blog = ({blog, updateBlog}) => {
             (blog.user.name)
         ) : (
             <div></div>
-        )}        
+        )}
+        {blog.user !== undefined && blog.user.name == loggedUser.name ? (
+            <div><button onClick={remove} style={removeButtonStyle}>remove</button></div>
+        ) : (
+            <div></div>
+        )}
+
       </div>
 
     </div>

@@ -81,7 +81,29 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-  } 
+  }
+
+  const removeBlog = async(blog) => {
+   
+    console.log('Remove button clicked for blog: ', blog)
+
+    try {
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+        await blogService.remove(blog.id)
+      }
+
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      )
+
+    } catch (exception) {
+      console.log('unable to remove!')
+      setErrorMessage('unable to remove')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }  
 
   const logOut = async (event) => {
     event.preventDefault()
@@ -170,7 +192,7 @@ const App = () => {
       </Togglable>   
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} loggedUser={user} removeBlog={removeBlog} />
       )}
     </div>
   )
