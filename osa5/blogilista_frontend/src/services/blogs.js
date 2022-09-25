@@ -9,7 +9,7 @@ const setToken = newToken => {
 
 const getAll = () => {
   const request = axios.get(baseUrl)
-  
+
   // sort blog posts by likes
   return request.then(response => {
     const sorted = response.data.sort((a, b) => b.likes - a.likes)

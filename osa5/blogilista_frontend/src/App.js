@@ -6,8 +6,6 @@ import loginService from './services/login'
 import { LoginForm } from './components/LoginForm'
 import Togglable from './components/Togglable'
 
-
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [title, setTitle] = useState('')
@@ -23,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -43,7 +41,7 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      )      
+      )
       blogService.setToken(user.token)
       console.log(user.token);
       setUser(user)
@@ -60,12 +58,12 @@ const App = () => {
 
   // add likes
   const updateBlog = async(blog) => {
-    const updateBlog = { 
+    const updateBlog = {
       title: blog.title,
       author: blog.author,
       url: blog.url,
       likes: blog.likes,
-    }    
+    }
     console.log('Like button clicked in blog: ', updateBlog)
 
     try {
@@ -85,7 +83,7 @@ const App = () => {
   }
 
   const removeBlog = async(blog) => {
-   
+
     console.log('Remove button clicked for blog: ', blog)
 
     try {
@@ -104,7 +102,7 @@ const App = () => {
         setErrorMessage(null)
       }, 5000)
     }
-  }  
+  }
 
   const logOut = async (event) => {
     event.preventDefault()
@@ -114,12 +112,12 @@ const App = () => {
   }
 
   const loginForm = () => {
-    
+
     return(
       <div>
         <div>
-        <Notification notificationMessage={notificationMessage} />
-        <Error errorMessage={errorMessage} />
+          <Notification notificationMessage={notificationMessage} />
+          <Error errorMessage={errorMessage} />
         </div>
         <div>
           <LoginForm
@@ -128,14 +126,14 @@ const App = () => {
             password={password}
             handleUsernameChange={({ target }) => setUsername(target.value)}
             handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}/>         
+            handleSubmit={handleLogin}/>
         </div>
       </div>
     )
 
   }
 
-  const blogAdder = async (newBlog) => {   
+  const blogAdder = async (newBlog) => {
     console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)
 
     const blog = await blogService.create(newBlog)
@@ -184,7 +182,7 @@ const App = () => {
           setBlogFormVisible={({ target }) => setBlogFormVisible(target.value)}
           blogAdder={blogAdder}
         />
-      </Togglable>   
+      </Togglable>
 
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} loggedUser={user} removeBlog={removeBlog} />
@@ -206,7 +204,7 @@ const Notification = ({ notificationMessage }) => {
     marginBottom: '10px'
   }
 
-  if (notificationMessage === null || notificationMessage == '') {
+  if (notificationMessage === null || notificationMessage === '') {
     return null
   }
 
@@ -230,7 +228,7 @@ const Error = ({ errorMessage }) => {
     marginBottom: '10px'
   }
 
-  if (errorMessage === null || errorMessage == '') {
+  if (errorMessage === null || errorMessage === '') {
     return null
   }
 

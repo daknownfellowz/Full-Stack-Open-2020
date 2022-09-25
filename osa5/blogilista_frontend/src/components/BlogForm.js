@@ -36,13 +36,13 @@ const BlogForm = ({ blogAdder }) => {
   }
 
   return (
-      <div>
-        <h2>create new</h2>
+    <div>
+      <h2>create new</h2>
 
-        <form onSubmit={addBlog}>
+      <form onSubmit={addBlog}>
         <div>
           title:
-            <input
+          <input
             value={newTitle}
             onChange={handleChangeTitle}
             placeholder='firsttitle'
@@ -50,23 +50,23 @@ const BlogForm = ({ blogAdder }) => {
         </div>
         <div>
           author:
-            <input          
-            value={newAuthor}          
+          <input
+            value={newAuthor}
             onChange={handleChangeAuthor}
           />
         </div>
         <div>
           url:
-            <input
+          <input
             value={newUrl}
             onChange={handleChangeUrl}
           />
         </div>
         <button type="submit">create</button>
-        </form>
+      </form>
 
-      </div>
-    )
+    </div>
+  )
 }
 
 BlogForm.propTypes = {

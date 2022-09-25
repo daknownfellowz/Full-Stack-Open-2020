@@ -11,6 +11,7 @@
   "author": "Anssi Syrjälä",
   "license": "MIT",
   "devDependencies": {
+    "eslint-plugin-jest": "^27.0.4",
     "nodemon": "^2.0.16"
   },
   "dependencies": {
