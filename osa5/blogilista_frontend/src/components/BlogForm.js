@@ -1,22 +1,39 @@
-import { useState } from 'react'
+import React,{ useState } from 'react'
+import PropTypes from 'prop-types'
 
-const BlogForm = ({ createBlog }) => {
-   const [newBlog, setNewBlog] = useState('')
+const BlogForm = ({ blogAdder }) => {
 
-   const handleChange = (event) => {
-    setNewBlog(event.target.value)
-   }
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
 
-   const addBlog = (event) => {
+  const handleChangeTitle = (event) => {
     event.preventDefault()
-    createBlog({
-      title: newBlog.newTitle,
-      author: newBlog.newAuthor,
-      url: newBlog.newUrl,
-    })
+    setNewTitle(event.target.value)
+  }
 
-    setNewBlog('')
-   }
+  const handleChangeAuthor = (event) => {
+    event.preventDefault()
+    setNewAuthor(event.target.value)
+  }
+
+  const handleChangeUrl = (event) => {
+    event.preventDefault()
+    setNewUrl(event.target.value)
+  }
+
+  const addBlog = (event) => {
+    event.preventDefault()
+    blogAdder({
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl,
+      likes: 0
+    })
+    setNewTitle('')
+    setNewAuthor('')
+    setNewUrl('')
+  }
 
   return (
       <div>
@@ -26,22 +43,23 @@ const BlogForm = ({ createBlog }) => {
         <div>
           title:
             <input
-            value={newBlog.title}
-            onChange={handleChange}     
+            value={newTitle}
+            onChange={handleChangeTitle}
+            placeholder='firsttitle'
           />
         </div>
         <div>
           author:
             <input          
-            value={newBlog.author}          
-            onChange={handleChange}
+            value={newAuthor}          
+            onChange={handleChangeAuthor}
           />
         </div>
         <div>
           url:
             <input
-            value={newBlog.url}
-            onChange={handleChange}
+            value={newUrl}
+            onChange={handleChangeUrl}
           />
         </div>
         <button type="submit">create</button>
@@ -49,6 +67,10 @@ const BlogForm = ({ createBlog }) => {
 
       </div>
     )
+}
+
+BlogForm.propTypes = {
+  handleChangeTitle: PropTypes.func.isRequired
 }
 
 export default BlogForm

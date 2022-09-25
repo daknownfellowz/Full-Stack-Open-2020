@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
 import blogService from './services/blogs'
+import BlogForm from './components/BlogForm'
 import loginService from './services/login'
+import { LoginForm } from './components/LoginForm'
+import Togglable from './components/Togglable'
+
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -32,13 +35,11 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()    
-    console.log('logging in with', username, password)
+  const handleLogin = async ({ username, password }) => {
 
     try {
       const user = await loginService.login({
-        username, password,
+        username, password
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
@@ -112,16 +113,35 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-    console.log('Add new blog data: ', title, author, url)
+  const loginForm = () => {
+    
+    return(
+      <div>
+        <div>
+        <Notification notificationMessage={notificationMessage} />
+        <Error errorMessage={errorMessage} />
+        </div>
+        <div>
+          <LoginForm
+            errorMessage={errorMessage}
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}/>         
+        </div>
+      </div>
+    )
 
-    const blog = await blogService.create({
-      title, author, url,
-    })
+  }
+
+  const blogAdder = async (newBlog) => {   
+    console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)
+
+    const blog = await blogService.create(newBlog)
 
     setNotificationMessage(
-      `a new blog ${title} by ${author} added`
+      `a new blog ${blog.title} by ${blog.author} added`
     )
     setTimeout(() => {
       setNotificationMessage(null)
@@ -138,34 +158,9 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <h2>Log in to application</h2>
 
-        <Notification notificationMessage={notificationMessage} />
-        <Error errorMessage={errorMessage} />
-
-        <form onSubmit={handleLogin}>
-        <div>
-          username
-            <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          password
-            <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-        </form>
-      </div>
+      <>{loginForm()}
+      </>
     )
   }
 
@@ -187,7 +182,7 @@ const App = () => {
           setAuthor={({ target }) => setAuthor(target.value)}
           setUrl={({ target }) => setUrl(target.value)}
           setBlogFormVisible={({ target }) => setBlogFormVisible(target.value)}
-          addBlog={addBlog}
+          blogAdder={blogAdder}
         />
       </Togglable>   
 
