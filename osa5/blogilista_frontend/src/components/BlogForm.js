@@ -43,14 +43,15 @@ const BlogForm = ({ blogAdder }) => {
         <div>
           title:
           <input
+            placeholder='Title'
             value={newTitle}
             onChange={handleChangeTitle}
-            placeholder='firsttitle'
           />
         </div>
         <div>
           author:
           <input
+            placeholder='Author'
             value={newAuthor}
             onChange={handleChangeAuthor}
           />
@@ -58,6 +59,7 @@ const BlogForm = ({ blogAdder }) => {
         <div>
           url:
           <input
+            placeholder='Url'
             value={newUrl}
             onChange={handleChangeUrl}
           />
