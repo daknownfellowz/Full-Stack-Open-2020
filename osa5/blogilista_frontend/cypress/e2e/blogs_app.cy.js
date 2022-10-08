@@ -72,4 +72,33 @@ describe('Blog app', function() {
 
   })
 
+  describe('When logged in part 2', function() {
+    beforeEach(function() {
+      // login
+      cy.login({ username: 'hkokki', password: 'salainen' })
+
+      const blogWithSecondMostLikes = {
+        title: 'The title with the second most likes',
+        author: 'first blogs author',
+        url: 'www.blog1.com',
+        likes: 10
+      }
+      cy.createBlog(blogWithSecondMostLikes)
+
+      const blogWithMostLikes = {
+        title: 'The title with the most likes',
+        author: 'second blogs author',
+        url: 'www.blog2.com',
+        likes: 50
+      }
+      cy.createBlog(blogWithMostLikes)
+    })
+
+    it('blogs are sorted by likes', function () {
+      cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+      cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
+    })
+
+  })
+
 })
