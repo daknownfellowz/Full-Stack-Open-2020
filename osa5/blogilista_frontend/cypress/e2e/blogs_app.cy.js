@@ -36,7 +36,7 @@ describe('Blog app', function() {
       cy.contains('wrong username or password')
     })
   })
-
+/*
   describe('When logged in', function() {
     beforeEach(function() {
       cy.contains('login').click()
@@ -70,8 +70,36 @@ describe('Blog app', function() {
       cy.contains('likes 1')
     })
 
-  })
+  }) */
 
+  describe('When logged in part 1', function() {
+    beforeEach(function() {
+      // login
+      cy.login({ username: 'hkokki', password: 'salainen' })
+    })
+    it('it can be removed', function () {
+    // create new blog
+      cy.contains('new blog').click()
+      cy.get('#title').type('a blog title created by cypress')
+      cy.get('#author').type('a blog author created by cypress')
+      cy.get('#url').type('a blog url created by cypress')
+      cy.get('#create').click()
+      // open blog and click like
+      cy.contains('view').click()
+      cy.contains('a blog title created by cypress')
+      cy.contains('likes 0')
+
+
+      /*cy.contains('a blog title created by cypress')
+      .contains('remove')
+      .click()*/
+      cy.contains('remove').click()
+
+      cy.contains('a blog title created by cypress')
+    })
+
+  })
+/*
   describe('When logged in part 2', function() {
     beforeEach(function() {
       // login
@@ -100,5 +128,5 @@ describe('Blog app', function() {
     })
 
   })
-
+*/
 })
