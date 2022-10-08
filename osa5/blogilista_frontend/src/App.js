@@ -43,8 +43,9 @@ const App = () => {
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
-      console.log(user.token);
+      console.log(user.token)
       setUser(user)
+      setBlogFormVisible(false)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -107,7 +108,7 @@ const App = () => {
   const logOut = async (event) => {
     event.preventDefault()
     console.log('Logging out...')
-    window.localStorage.removeItem('loggedBlogappUser');
+    window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
   }
 
@@ -176,6 +177,7 @@ const App = () => {
           title={title}
           author={author}
           url={url}
+          blogFormVisible={blogFormVisible}
           setTitle={({ target }) => setTitle(target.value)}
           setAuthor={({ target }) => setAuthor(target.value)}
           setUrl={({ target }) => setUrl(target.value)}
