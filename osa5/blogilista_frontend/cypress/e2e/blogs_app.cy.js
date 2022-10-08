@@ -36,7 +36,7 @@ describe('Blog app', function() {
       cy.contains('wrong username or password')
     })
   })
-/*
+
   describe('When logged in', function() {
     beforeEach(function() {
       cy.contains('login').click()
@@ -70,7 +70,7 @@ describe('Blog app', function() {
       cy.contains('likes 1')
     })
 
-  }) */
+  })
 
   describe('When logged in part 1', function() {
     beforeEach(function() {
@@ -89,17 +89,11 @@ describe('Blog app', function() {
       cy.contains('a blog title created by cypress')
       cy.contains('likes 0')
 
-
-      /*cy.contains('a blog title created by cypress')
-      .contains('remove')
-      .click()*/
       cy.contains('remove').click()
-
-      cy.contains('a blog title created by cypress')
     })
 
   })
-/*
+
   describe('When logged in part 2', function() {
     beforeEach(function() {
       // login
@@ -128,5 +122,5 @@ describe('Blog app', function() {
     })
 
   })
-*/
+
 })
