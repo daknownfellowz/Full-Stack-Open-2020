@@ -7,14 +7,27 @@ const App = () => {
 
   const dispatch = useDispatch()
 
-  const vote = (id) => {
-    console.log('vote', id)
+  const createAnecdote = (content) => { return {
+      type: 'NEW_ANECDOTE',
+      data: {
+        content,        
+        id: generateId(),
+        votes: 0
+      }
+    }
+  }
 
-    dispatch({
+  const createVote = (id) => {
+    return {
       type: 'VOTE',
       data: id
-    })
-  }
+    }
+  }  
+
+  const vote = (id) => {
+    console.log('vote', id)
+    dispatch(createVote(id))
+  } 
 
   const addAnecdote = (event) => {
     event.preventDefault()
@@ -22,14 +35,7 @@ const App = () => {
     console.log('anecdote', event)
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    dispatch({
-      type: 'NEW_ANECDOTE',
-      data: {
-        content,        
-        id: generateId(),
-        votes: 0
-      }
-    })
+    dispatch(createAnecdote(content))
   }
 
   const generateId = () =>
