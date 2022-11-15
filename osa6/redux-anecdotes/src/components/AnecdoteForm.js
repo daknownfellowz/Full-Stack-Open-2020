@@ -3,13 +3,13 @@ import { createAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import anecdoteService from '../services/anecdotes'
 
-const AnecdoteForm = (props) => {
+const AnecdoteForm = () => {
 
   const dispatch = useDispatch()
 
   const addAnecdote = async (event) => {
     event.preventDefault()
-    console.log('anecdote separated: ', event)
+    console.log('anecdote separated no props: ', event)
 
     const content = event.target.anecdote.value
     console.log('content is: ', content)
