@@ -45,5 +45,13 @@ export const initializeAnecdotes = () => {
   }
 }
 
-export const { createAnecdote, createVote, setAnecdotes, appendAnecdote } = anecdoteSlice.actions
+export const createAnecdote = content => {
+  return async dispatch => {
+    console.log('createAnecdote is new')
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch(appendAnecdote(newAnecdote))
+  }
+}
+
+export const { createVote, setAnecdotes, appendAnecdote } = anecdoteSlice.actions
 export default anecdoteSlice.reducer
