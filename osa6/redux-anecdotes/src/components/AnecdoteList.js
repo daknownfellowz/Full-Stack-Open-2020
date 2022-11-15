@@ -14,12 +14,10 @@ const AnecdoteList = () => {
     )
   )
 
-  const vote = (id) => {
+  const vote = async (id) => {
 
-    dispatch(createVote(id))    
-    dispatch(
-      setNotification(`you voted '${anecdotes.find((a) => a.id === id).content}'`, 5)
-    )
+    dispatch(createVote(id))
+    dispatch(setNotification(`you voted '${anecdotes.find((a) => a.id === id).content}'`, 5))
   }
 
   return (
