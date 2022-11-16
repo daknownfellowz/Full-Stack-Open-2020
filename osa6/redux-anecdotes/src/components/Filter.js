@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { filter } from '../reducers/filterReducer'
 
-const Filter = ({ filter }) => {    
+const Filter = (props) => {    
     const handleChange = (event) => {      
       
       console.log('Filter: ', event.target.value)
-      filter(event.target.value)
+      props.filter(event.target.value)
       
     }
     const style = {
@@ -19,12 +19,11 @@ const Filter = ({ filter }) => {
     )
   }
 
-  const stateToProps = (state) => {
+  const mapStateToProps = (state) => {
     return {
       filter: state.filter,
     };
   };
   
-  const StateToFilter = connect(stateToProps, { filter }) (Filter)
+  const StateToFilter = connect(mapStateToProps, { filter }) (Filter)
   export default StateToFilter
-
