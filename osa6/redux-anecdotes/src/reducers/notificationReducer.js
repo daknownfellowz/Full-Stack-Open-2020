@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = '' // 'Default notification text!'
+const initialState = ''
+
+let timeoutId;
 
 const notificationSlice = createSlice({ 
   name: 'notification',
@@ -22,12 +24,16 @@ export const { createNotification, reset } = notificationSlice.actions
 /* setNotification and vanish after delay */
 export const setNotification = (content, delay) => {
     return (dispatch) => {
+      
+      console.log('Previous message with timeoutId should be cleared before making new notification with timeout: ', timeoutId)
+      clearTimeout(timeoutId);
+
       dispatch(createNotification(content));
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         dispatch(reset());
       }, delay * 1000);
+
     };
   };
-
 
 export default notificationSlice.reducer
