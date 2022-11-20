@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   BrowserRouter as Router,
   Routes, Route, Link,
-  useParams
+  useParams, useNavigate
 } from "react-router-dom"
 
 const AnecdoteList = ({ anecdotes }) => (
@@ -57,15 +57,19 @@ const CreateNew = (props) => {
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    console.log('Add new anecdite: ', content, author, info)
+      
     props.addNew({
       content,
       author,
       info,
       votes: 0
     })
+    navigate('/')    
   }
 
   return (
@@ -108,12 +112,23 @@ const App = () => {
       id: 2
     }
   ])
+  const [notificationMessage, setNotificationMessage] = useState('')
 
-  const [notification, setNotification] = useState('')
+  // notificationMessage for 5 second
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
+    return () => {
+      clearTimeout(timer)
+    };
+  }, [notificationMessage])
+    
 
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotificationMessage(`a new anecdote '${anecdote.content}' created!`);
   }
 
   const anecdoteById = (id) =>
@@ -130,6 +145,20 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
+  const Notification = ({ notificationMessage }) => {
+    console.log('Nofication kutsuttu: ', notificationMessage)
+
+    if (notificationMessage === null || notificationMessage === '') {
+      return null
+    }
+    
+    return (
+      <div>
+        {notificationMessage}
+      </div>
+    )
+  }
+
   const padding = {
     paddingRight: 5
   }
@@ -144,11 +173,12 @@ const App = () => {
           <Link style={padding} to="/create">create new</Link>
           <Link style={padding} to="/about">about</Link>
         </div>
+        <Notification notificationMessage={notificationMessage} />
 
         <Routes>
           <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route path="/create" element={<CreateNew />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} />} />
           <Route path="/about" element={<About />} />
         </Routes>
 
