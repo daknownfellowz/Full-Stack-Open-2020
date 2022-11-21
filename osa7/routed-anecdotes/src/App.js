@@ -64,14 +64,16 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     console.log('Add new anecdite: ', content, author, info)
-      
-    props.addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
-      votes: 0
-    })
-    navigate('/')    
+    
+    if (!content === '' && !author === '' && !info === '') {      
+      props.addNew({
+        content: content.value,
+        author: author.value,
+        info: info.value,
+        votes: 0
+      })
+      navigate('/')
+    }
   }
 
   return (
@@ -91,6 +93,9 @@ const CreateNew = (props) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={function(event){ content.reset(); author.reset(); info.reset() }}>
+          reset
+        </button> 
       </form>
     </div>
   )
