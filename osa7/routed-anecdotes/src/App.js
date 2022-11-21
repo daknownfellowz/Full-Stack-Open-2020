@@ -65,7 +65,7 @@ const CreateNew = (props) => {
     e.preventDefault()
     console.log('Add new anecdite: ', content, author, info)
     
-    if (!content === '' && !author === '' && !info === '') {      
+    if (content.value !== '' && author.value !== '' && info.value !== '') {      
       props.addNew({
         content: content.value,
         author: author.value,
