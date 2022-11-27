@@ -5,24 +5,16 @@ import BlogForm from './components/BlogForm'
 import loginService from './services/login'
 import { LoginForm } from './components/LoginForm'
 import Togglable from './components/Togglable'
-import Notification from './components/Notification'
-//import { createNotification } from './reducers/notificationReducer'
-
-//import { useDispatch } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  /* const [notificationMessage, setNotificationMessage] = useState('') */
+  const [notification, setNotificationMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogFormVisible, setBlogFormVisible] = useState(null)
-
-  //const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -52,8 +44,6 @@ const App = () => {
       console.log(user.token)
       setUser(user)
       setBlogFormVisible(false)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
       setErrorMessage('wrong username or password')
@@ -118,33 +108,17 @@ const App = () => {
     setUser(null)
   }
 
-  const loginForm = () => {
-
-    return(
-      <div>
-        <div>
-          <Notification />
-          <Error errorMessage={errorMessage} />
-        </div>
-        <div>
-          <LoginForm
-            errorMessage={errorMessage}
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}/>
-        </div>
-      </div>
-    )
-
-  }
-
   const blogAdder = async (newBlog) => {
     console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)
 
-    /*const blog = */
-    await blogService.create(newBlog)
+    const blog = await blogService.create(newBlog)
+
+    setNotificationMessage(
+      `a new blog ${blog.title} by ${blog.author} added`
+    )
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
 
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -155,19 +129,19 @@ const App = () => {
     setBlogFormVisible(false)
   }
 
-  if (user === null) {
-    return (
 
-      <>{loginForm()}
-      </>
-    )
+  if (user === null) {
+    return <>
+      <Notification notification={notification} />
+      <LoginForm onLogin={handleLogin} />
+    </>
   }
 
   return (
     <div>
       <h2>blogs</h2>
 
-      <Notification />
+      <Notification notificationMessage={notification} />
       <Error errorMessage={errorMessage} />
 
       <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
@@ -189,6 +163,30 @@ const App = () => {
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} loggedUser={user} removeBlog={removeBlog} />
       )}
+    </div>
+  )
+}
+
+const Notification = ({ notificationMessage }) => {
+
+  const notificationStyle = {
+    color: 'green',
+    backgroundColor: 'lightgrey',
+    fontStyle: 'italic',
+    fontSize: '20px',
+    borderRadius: '5px',
+    border: '2px solid green',
+    padding: '10px',
+    marginBottom: '10px'
+  }
+
+  if (notificationMessage === null || notificationMessage === '') {
+    return null
+  }
+
+  return (
+    <div style={notificationStyle}>
+      {notificationMessage}
     </div>
   )
 }
