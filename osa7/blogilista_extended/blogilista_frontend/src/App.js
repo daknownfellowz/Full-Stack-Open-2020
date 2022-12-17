@@ -1,27 +1,45 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import { useDispatch, useSelector } from 'react-redux'
+
+import BlogList from './components/BlogList'
 import blogService from './services/blogs'
 import BlogForm from './components/BlogForm'
 import loginService from './services/login'
-import { LoginForm } from './components/LoginForm'
+import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 
+import Notification from './components/Notification'
+
+//import Users from './components/Users' . // 6.12. Lisää nää myöhemmin!
+//import User from './components/User'     // 6.12. Lisää nää myöhemmin!
+
+//import userService from './services/users'
+
+import { initializeBlogs, createBlog } from './reducers/blogReducer'
+import { createNotification } from './reducers/notificationReducer'
+//import { login } from './reducers/loginReducer'
+//import { initializeUsers } from './reducers/userReducer'
+
+
 const App = () => {
+
   const [blogs, setBlogs] = useState([])
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [notification, setNotificationMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [blogFormVisible, setBlogFormVisible] = useState(null)
 
+  const dispatch = useDispatch()
+
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    dispatch(initializeBlogs())
   }, [])
 
+  // Todo: reduxoi allaoleva
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
@@ -30,7 +48,7 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
+  // Todo: reduxoi logini 
   const handleLogin = async ({ username, password }) => {
 
     try {
@@ -44,57 +62,11 @@ const App = () => {
       console.log(user.token)
       setUser(user)
       setBlogFormVisible(false)
+      setUsername('')
+      setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
       setErrorMessage('wrong username or password')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  // add likes
-  const updateBlog = async(blog) => {
-    const updateBlog = {
-      title: blog.title,
-      author: blog.author,
-      url: blog.url,
-      likes: blog.likes,
-    }
-    console.log('Like button clicked in blog: ', updateBlog)
-
-    try {
-      await blogService.update(blog.id, updateBlog)
-
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
-
-    } catch (exception) {
-      console.log('unable to update!')
-      setErrorMessage('unable to update')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-  }
-
-  const removeBlog = async(blog) => {
-
-    console.log('Remove button clicked for blog: ', blog)
-
-    try {
-      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-        await blogService.remove(blog.id)
-      }
-
-      blogService.getAll().then(blogs =>
-        setBlogs( blogs )
-      )
-
-    } catch (exception) {
-      console.log('unable to remove!')
-      setErrorMessage('unable to remove')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -108,17 +80,42 @@ const App = () => {
     setUser(null)
   }
 
-  const blogAdder = async (newBlog) => {
-    console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)
+  const loginForm = () => {
 
-    const blog = await blogService.create(newBlog)
-
-    setNotificationMessage(
-      `a new blog ${blog.title} by ${blog.author} added`
+    return(
+      <div>
+        <div>
+          <Notification />
+        </div>
+        <div>
+          <LoginForm
+            errorMessage={errorMessage}
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}/>
+        </div>
+      </div>
     )
-    setTimeout(() => {
-      setNotificationMessage(null)
-    }, 5000)
+
+  }
+
+  const blogAdder = async (newBlog) => {
+
+    console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)    
+    const blog = dispatch(createBlog(newBlog)) // redux
+
+    // redux
+    dispatch(
+      createNotification(
+        {
+          message: `A new blog ${blog.title} by ${blog.author} added`,
+          type: 'success',
+        },
+        5
+      )
+    )
 
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -129,25 +126,26 @@ const App = () => {
     setBlogFormVisible(false)
   }
 
-
   if (user === null) {
-    return <>
-      <Notification notification={notification} />
-      <LoginForm onLogin={handleLogin} />
-    </>
+    return (
+
+      <>{loginForm()}
+      </>
+    )
   }
 
   return (
     <div>
-      <h2>blogs</h2>
+      <h2>Blogs redux</h2>
 
-      <Notification notificationMessage={notification} />
-      <Error errorMessage={errorMessage} />
+      <Notification />
 
       <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
 
-      <Togglable buttonLabel='new blog'>
-        <BlogForm
+      <BlogList />
+
+      <Togglable buttonLabel='new blog'>      
+      <BlogForm
           title={title}
           author={author}
           url={url}
@@ -158,61 +156,9 @@ const App = () => {
           setBlogFormVisible={({ target }) => setBlogFormVisible(target.value)}
           blogAdder={blogAdder}
         />
+
       </Togglable>
-
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} loggedUser={user} removeBlog={removeBlog} />
-      )}
     </div>
   )
 }
-
-const Notification = ({ notificationMessage }) => {
-
-  const notificationStyle = {
-    color: 'green',
-    backgroundColor: 'lightgrey',
-    fontStyle: 'italic',
-    fontSize: '20px',
-    borderRadius: '5px',
-    border: '2px solid green',
-    padding: '10px',
-    marginBottom: '10px'
-  }
-
-  if (notificationMessage === null || notificationMessage === '') {
-    return null
-  }
-
-  return (
-    <div style={notificationStyle}>
-      {notificationMessage}
-    </div>
-  )
-}
-
-const Error = ({ errorMessage }) => {
-
-  const errorStyle = {
-    color: 'red',
-    backgroundColor: 'lightgrey',
-    fontStyle: 'italic',
-    fontSize: '20px',
-    borderRadius: '5px',
-    border: '2px solid red',
-    padding: '10px',
-    marginBottom: '10px'
-  }
-
-  if (errorMessage === null || errorMessage === '') {
-    return null
-  }
-
-  return (
-    <div style={errorStyle}>
-      {errorMessage}
-    </div>
-  )
-}
-
 export default App
