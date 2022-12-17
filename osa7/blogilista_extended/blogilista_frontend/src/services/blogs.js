@@ -33,10 +33,16 @@ const update = async (id, blogToBeUpdated) => {
   return response.data
 }
 
+const addLike = async (id, blogToBeUpdated) => {
+  const response = await axios.put(`${baseUrl}/${id}`, blogToBeUpdated)
+  console.log('ADDING LIKE: ', response.data)
+  return response.data;
+}
+
 const remove = async (id) => {
 
   const response = await axios.delete(`${baseUrl}/${id}`)
   return response.data
 }
 
-export default { getAll, create, update, setToken, remove }
+export default { getAll, create, update, addLike, setToken, remove }

@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, loggedUser, removeBlog }) => {
+const Blog = ({ blog, loggedUser }) => {
+
+  const dispatch = useDispatch()
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -12,7 +17,7 @@ const Blog = ({ blog, updateBlog, loggedUser, removeBlog }) => {
   const removeButtonStyle = {
     backgroundColor: 'blue',
   }
-
+  
   const [visible, setVisible] = useState(false)
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -21,19 +26,18 @@ const Blog = ({ blog, updateBlog, loggedUser, removeBlog }) => {
     setVisible(!visible)
   }
 
-  const addLike = () => {
-    console.log('Like button clicked!!!')
-    updateBlog({
-      ...blog,
-      likes: blog.likes + 1,
-    })
+  const addLike = (blog) => {
+    const { id } = blog
+    console.log('Like button clicked to ID: ', id)
+    const blogToUpdate = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+    dispatch(likeBlog(id, blogToUpdate))
   }
 
-  const remove = () => {
+  const remove = (blog) => {
     console.log('Remove button clicked!!!')
-    removeBlog({
-      ...blog
-    })
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      dispatch(deleteBlog(blog))
+    }
   }
 
   return (
@@ -45,15 +49,15 @@ const Blog = ({ blog, updateBlog, loggedUser, removeBlog }) => {
 
         <div style={showWhenVisible} className="togglableContent">
           {blog.url}
-          <br />likes {blog.likes} <button onClick={addLike}>like</button>
+          <br />likes {blog.likes} <button onClick={() => addLike(blog)}>like</button>
           <br />
           {blog.user !== undefined ? (
-            (blog.user.name)
+            (blog.user.username)
           ) : (
             <div></div>
           )}
-          {blog.user !== undefined && blog.user.name === loggedUser.name ? (
-            <div><button onClick={remove} style={removeButtonStyle}>remove</button></div>
+          {blog.user !== undefined /*&& blog.user.name === loggedUser.name*/ ? (
+            <div><button onClick={() => remove(blog)} style={removeButtonStyle}>remove</button></div>
           ) : (
             <div></div>
           )}
