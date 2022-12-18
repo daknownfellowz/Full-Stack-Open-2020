@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
+
+* {
+  font-family: "Noto Sans", sans-serif;
+}
+
+.header {
+  color: rgb(0, 79, 128);
+}
+
+.navigationbar {
+  background-color: rgb(82, 171, 226);
+  padding: 20px;
+}
+
+.footerbar {
+  background-color: rgb(82, 171, 226);
+  margin-top: 80px;
+  padding: 20px;
+}
+
+.loginform {
+  margin: 20px 0px 0px 0px;
+  padding: 10px 0px 0px 0px;
+}
+
+#bloglist {
+  margin-top: 20px;
+}

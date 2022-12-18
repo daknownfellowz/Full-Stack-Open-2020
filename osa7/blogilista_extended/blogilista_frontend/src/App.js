@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Container } from '@mui/material'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  useMatch, Routes, Route, Link
 } from "react-router-dom"
+import {
+  Button,
+  TextField,
+  Label,
+  TableContainer,
+  TableRow,
+  Paper,
+} from "@mui/material"
 
 import BlogList from './components/BlogList'
 import blogService from './services/blogs'
@@ -15,6 +24,7 @@ import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 
 import Users from './components/Users'
+import User from './components/User'
 
 //import Users from './components/Users' . // 6.12. Lisää nää myöhemmin!
 //import User from './components/User'     // 6.12. Lisää nää myöhemmin!
@@ -49,8 +59,10 @@ const App = () => {
 
   useEffect(() => {    
     const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
-    dispatch(setUser(user))
-    blogService.setToken(user.token)
+    dispatch(setUser(user))    
+    if (user != null) {
+      blogService.setToken(user.token)
+    }
   }, [dispatch])
   
   const handleLogin = async ({ username, password }) => {
@@ -124,34 +136,39 @@ const App = () => {
 
   if (user === null) {
     return (
+      <Container>
 
       <>{loginForm()}
       </>
+      </Container>
     )
   }
 
-
   const padding = {
-    padding: 5
+    padding: 5,    
   }
 
   return (
+    <Container>
     <div>
-    <h2>Blogs redux</h2>
+    <h2 className="header">Blogs redux</h2>
 
     <Notification />
-
-    <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
   
     <Router>
-      <div>        
+      <div class="navigationbar">        
         <Link style={padding} to="/">blogs</Link>
         <Link style={padding} to="/users">users</Link>
+        <span style={padding}>{user.name} logged in </span>
+        <Button variant="contained" color="primary" onClick={logOut}>
+        logout
+        </Button>
       </div>
 
       <Routes>
         <Route path="/" element={<BlogList />} />
-        <Route path="/users" element={<Users users={users} />} />        
+        <Route path="/users" element={<Users users={users} />} />
+        <Route path="/users/:id" element={<User />} />
       </Routes>
 
       <Togglable buttonLabel='new blog'>      
@@ -169,11 +186,12 @@ const App = () => {
 
       </Togglable>      
 
-      <div>
+      <div class="footerbar"> 
         <i>Blog app, Anssi Syrjälä 2022</i>
       </div>
     </Router>
     </div>
+    </Container>
   )  
 
 }

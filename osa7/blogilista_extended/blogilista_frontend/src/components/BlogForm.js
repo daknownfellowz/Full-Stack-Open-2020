@@ -1,4 +1,13 @@
 import React,{ useState } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Button,
+  Paper,
+} from "@mui/material"
 import PropTypes from 'prop-types'
 
 const BlogForm = ({ blogAdder }) => {
@@ -37,37 +46,53 @@ const BlogForm = ({ blogAdder }) => {
 
   return (
     <div>
-      <h2>create new</h2>
+      <h2 className="header">create new</h2>
 
       <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            id='title'
-            placeholder='Title'
-            value={newTitle}
-            onChange={handleChangeTitle}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            id='author'
-            placeholder='Author'
-            value={newAuthor}
-            onChange={handleChangeAuthor}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            id='url'
-            placeholder='Url'
-            value={newUrl}
-            onChange={handleChangeUrl}
-          />
-        </div>
-        <button id="create" type="submit">create</button>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell>title:</TableCell>
+              <TableCell>
+              <input
+                id='title'
+                placeholder='Title'
+                value={newTitle}
+                onChange={handleChangeTitle}
+              />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>author:</TableCell>
+              <TableCell>
+              <input
+                id='author'
+                placeholder='Author'
+                value={newAuthor}
+                onChange={handleChangeAuthor}
+              />
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>url:</TableCell>
+              <TableCell>
+              <input
+                id='url'
+                placeholder='Url'
+                value={newUrl}
+                onChange={handleChangeUrl}
+              />
+              </TableCell>
+            </TableRow>
+            <Button variant="contained" color="primary" type="submit" id="create">
+            create
+            </Button>
+
+
+            </TableBody>
+          </Table>
+        </TableContainer>
       </form>
 
     </div>
