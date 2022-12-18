@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import BlogList from './components/BlogList'
@@ -13,57 +13,49 @@ import Notification from './components/Notification'
 //import Users from './components/Users' . // 6.12. Lisää nää myöhemmin!
 //import User from './components/User'     // 6.12. Lisää nää myöhemmin!
 
-//import userService from './services/users'
-
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { createNotification } from './reducers/notificationReducer'
-//import { login } from './reducers/loginReducer'
-//import { initializeUsers } from './reducers/userReducer'
-
+import { setUser } from './reducers/loginReducer'
 
 const App = () => {
 
-  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
-  const [blogFormVisible, setBlogFormVisible] = useState(null)
+  const [errorMessage, setErrorMessage] = useState('')  
+  const [blogFormVisible, setBlogFormVisible] = useState('')
 
   const dispatch = useDispatch()
+  const user = useSelector(state => state.user)  
 
   useEffect(() => {
     dispatch(initializeBlogs())
-  }, [])
+  }, [dispatch])
 
-  // Todo: reduxoi allaoleva
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
-  // Todo: reduxoi logini 
+
+
+  useEffect(() => {    
+    const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
+    dispatch(setUser(user))
+  }, [dispatch])
+  
   const handleLogin = async ({ username, password }) => {
-
+    
     try {
       const user = await loginService.login({
         username, password
       })
+
+      blogService.setToken(user.token)      
+      dispatch(setUser(user))      
+      setBlogFormVisible(false)
+      setUsername('')
+      setPassword('')  
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
-      blogService.setToken(user.token)
-      console.log(user.token)
-      setUser(user)
-      setBlogFormVisible(false)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       console.log('wrong credentials')
       setErrorMessage('wrong username or password')
@@ -73,11 +65,9 @@ const App = () => {
     }
   }
 
-  const logOut = async (event) => {
-    event.preventDefault()
-    console.log('Logging out...')
-    window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+  const logOut = () => {    
+    dispatch(setUser(null))
+    window.localStorage.removeItem('loggedBlogappUser')    
   }
 
   const loginForm = () => {
@@ -104,9 +94,8 @@ const App = () => {
   const blogAdder = async (newBlog) => {
 
     console.log('Add new blog data: ', newBlog.title, newBlog.author, newBlog.url)    
-    const blog = dispatch(createBlog(newBlog)) // redux
+    const blog = dispatch(createBlog(newBlog))
 
-    // redux
     dispatch(
       createNotification(
         {
@@ -115,10 +104,6 @@ const App = () => {
         },
         5
       )
-    )
-
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
     )
     setTitle('')
     setAuthor('')
