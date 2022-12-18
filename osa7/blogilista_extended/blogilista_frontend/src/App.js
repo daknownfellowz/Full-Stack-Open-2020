@@ -10,12 +10,16 @@ import Togglable from './components/Togglable'
 
 import Notification from './components/Notification'
 
+import Users from './components/Users'
+
 //import Users from './components/Users' . // 6.12. Lisää nää myöhemmin!
 //import User from './components/User'     // 6.12. Lisää nää myöhemmin!
 
 import { initializeBlogs, createBlog } from './reducers/blogReducer'
 import { createNotification } from './reducers/notificationReducer'
 import { setUser } from './reducers/loginReducer'
+import { initializeUsers } from './reducers/userReducer'
+
 
 const App = () => {
 
@@ -28,13 +32,16 @@ const App = () => {
   const [blogFormVisible, setBlogFormVisible] = useState('')
 
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)  
+  const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
 
   useEffect(() => {
     dispatch(initializeBlogs())
   }, [dispatch])
 
-
+  useEffect(() => {
+    dispatch(initializeUsers())
+  }, [dispatch])
 
   useEffect(() => {    
     const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
@@ -127,7 +134,9 @@ const App = () => {
 
       <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
 
-      <BlogList />
+      <Users users={users} />
+
+      <BlogList />      
 
       <Togglable buttonLabel='new blog'>      
       <BlogForm
