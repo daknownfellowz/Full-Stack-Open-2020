@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  BrowserRouter as Router,
+  Routes, Route, Link
+} from "react-router-dom"
 
 import BlogList from './components/BlogList'
 import blogService from './services/blogs'
@@ -46,6 +50,7 @@ const App = () => {
   useEffect(() => {    
     const user = JSON.parse(localStorage.getItem('loggedBlogappUser'))
     dispatch(setUser(user))
+    blogService.setToken(user.token)
   }, [dispatch])
   
   const handleLogin = async ({ username, password }) => {
@@ -53,10 +58,9 @@ const App = () => {
     try {
       const user = await loginService.login({
         username, password
-      })
-
-      blogService.setToken(user.token)      
-      dispatch(setUser(user))      
+      })      
+      dispatch(setUser(user))
+      blogService.setToken(user.token)
       setBlogFormVisible(false)
       setUsername('')
       setPassword('')  
@@ -126,17 +130,29 @@ const App = () => {
     )
   }
 
+
+  const padding = {
+    padding: 5
+  }
+
   return (
     <div>
-      <h2>Blogs redux</h2>
+    <h2>Blogs redux</h2>
 
-      <Notification />
+    <Notification />
 
-      <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
+    <p>{user.name} logged in <button onClick={logOut}>logout</button></p>
+  
+    <Router>
+      <div>        
+        <Link style={padding} to="/">blogs</Link>
+        <Link style={padding} to="/users">users</Link>
+      </div>
 
-      <Users users={users} />
-
-      <BlogList />      
+      <Routes>
+        <Route path="/" element={<BlogList />} />
+        <Route path="/users" element={<Users users={users} />} />        
+      </Routes>
 
       <Togglable buttonLabel='new blog'>      
       <BlogForm
@@ -151,8 +167,14 @@ const App = () => {
           blogAdder={blogAdder}
         />
 
-      </Togglable>
+      </Togglable>      
+
+      <div>
+        <i>Blog app, Anssi Syrjälä 2022</i>
+      </div>
+    </Router>
     </div>
-  )
+  )  
+
 }
 export default App
